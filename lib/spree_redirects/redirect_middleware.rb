@@ -18,20 +18,14 @@ module SpreeRedirects
       if routing_error.present? or status == 404
         path = [ env["PATH_INFO"], env["QUERY_STRING"] ].join("?").sub(/[\/\?\s]*$/, "").strip
 
-        if url = find_redirect(path)
-          # Issue a "Moved permanently" response with the redirect location
-          return [ 301, { "Location" => url }, [ "Redirecting..." ] ]
+        if redirect = Spree::Redirect.find_by_old_url(path)
+          status = redirect.http_code.blank? ? 301 : redirect.http_code
+          return [ status, { "Location" => redirect.new_url }, [ "Redirecting..." ] ]
         end
         raise routing_error unless routing_error.blank? || routing_error.is_a?(ActiveRecord::RecordNotFound)
       end
 
       [ status, headers, body ]
     end
-
-    def find_redirect(url)
-      redirect = Spree::Redirect.find_by_old_url(url)
-      redirect.new_url unless redirect.nil?
-    end
-
   end
 end

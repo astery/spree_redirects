@@ -1,13 +1,55 @@
 <%= render :partial => 'spree/admin/shared/configuration_menu' %>
 
-<h1>Listing Redirects</h1>
+<% content_for :page_title do %>
+   <i class="icon-arrow-right"></i> <%= Spree.t(:redirects) %>
+<% end %>
+
+<% content_for :table_filter_title do %>
+  <%= Spree.t(:search) %>
+<% end %>
+
+<% content_for :table_filter do %>
+  <div class="box" data-hook="admin_redirect_index_search">
+    <%= search_form_for @search, url: admin_redirects_path do |f| %>
+      <div class="field-block alpha three columns">
+        <div class="field">
+          <%= Spree.t(:old_url) %>
+          <%= f.text_field :old_url_cont, size: 18 %>
+        </div>
+      </div>
+      <div class="three columns">
+        <div class="field">
+          <%= Spree.t(:new_url) %>
+          <%= f.text_field :new_url_cont, size: 18 %>
+        </div>
+      </div>
+      <div class="three omega columns">
+        <div class="field">
+          <%= Spree.t(:http_code) %>
+          <%= f.text_field :http_code_eq, size: 18 %>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="actions filter-actions">
+        <div data-hook="admin_redirect_index_search_buttons">
+          <%= button Spree.t(:search) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div id="new_redirect_form"></div>
 
 <table class="index">
   <thead>
 	<tr>
-    	<th><%= sort_link @search, :old_url,  t('redirect.old_url') %></th>
-    	<th><%= sort_link @search, :new_url, t('redirect.new_url') %></th>
-    	<th><%= t('action') %></th>
+    	<th><%= sort_link @search, :old_url,  Spree.t(:old_url) %></th>
+    	<th><%= sort_link @search, :new_url, Spree.t(:new_url) %></th>
+      <th><%= sort_link @search, :http_code, Spree.t(:http_code) %></th>
+    	<th><%= Spree.t('action') %></th>
 	</tr>
   </thead>
   <tbody>
@@ -15,9 +57,10 @@
     <tr id="<%= dom_id redirect %>">
       <td><%= redirect.old_url %></td>
       <td><%= redirect.new_url %></td>
+      <td><%= redirect.http_code %></td>
       <td>
-      	<%= link_to_edit redirect %> &nbsp;
-      	<%= link_to_delete redirect %>
+      	<%= link_to_edit redirect, :no_text => true %> &nbsp;
+      	<%= link_to_delete redirect, :no_text => true %>
       </td>
     </tr>
     <% end %>
@@ -26,22 +69,7 @@
 
 <%= paginate @collection %>
 
-<div id="new_redirect_form"></div>
-<br/>
-<p>
-  <%= link_to icon('add') + ' ' + t(".new_redirect"), new_admin_redirect_url, :id => "new_redirect_link" %>
-</p>
-
-<% content_for :head do %>
-  <script type="text/javascript">
-    jQuery(document).ready(function(){  
-      
-      jQuery('#new_redirect_link').click(function(event) { 
-        event.preventDefault();
-        jQuery(this).hide();
-        jQuery.ajax({type: 'GET', url: this.href, data: ({authenticity_token: AUTH_TOKEN}), success: function(r){ jQuery('#new_redirect_form').html(r);} });
-      });
-      
-    });
-  </script>
+<% content_for :page_actions do %>
+  <li><%= button_link_to Spree.t(:new_redirect), new_admin_redirect_url, {remote: true, icon: 'icon-plus', id: "admin_new_redirect"} %></li>
 <% end %>
+

@@ -1,11 +1,25 @@
-<%= form.field_container :old_url do %>
-  <%= form.label :old_url, t('old_url') %><br />
-  <%= form.text_field :old_url, :class => 'text' %>
-  <%= error_message_on :redirect, :old_url %>
-<% end %>
+<div data-hook="admin_product_form_fields">
+  <div class="left three columns alpha" data-hook="admin_product_form_left">
+    <%= form.field_container :old_url do %>
+      <%= form.label :old_url, t('old_url') %><br />
+      <%= form.text_field :old_url, :class => 'text' %>
+      <%= error_message_on :redirect, :old_url %>
+    <% end %>
+  </div>
 
-<%= form.field_container :new_url do %>
-  <%= form.label :new_url, t('new_url') %><br />
-  <%= form.text_field :new_url, :class => 'text' %>
-  <%= error_message_on :redirect, :new_url %>
-<% end %>
+  <div class="three columns">
+    <%= form.field_container :new_url do %>
+      <%= form.label :new_url, t('new_url') %><br />
+      <%= form.text_field :new_url, :class => 'text' %>
+      <%= error_message_on :redirect, :new_url %>
+    <% end %>
+  </div>
+
+  <div class="omega three columns">
+    <%= form.field_container :http_code do %>
+      <%= form.label :http_code, t('http_code') %><br />
+      <%= form.text_field :http_code, :class => 'text' %>
+      <%= error_message_on :redirect, :http_code %>
+    <% end %>
+  </div>
+</div>

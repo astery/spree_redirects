@@ -1,26 +1,13 @@
-<%= render :partial => 'spree/admin/shared/configuration_menu' unless request.xhr? %>
-
-<h3><%= t '.new_redirect' %></h3>
-
-<%= render 'spree/shared/error_messages', :target => @redirect %>
+<%= render partial: 'spree/shared/error_messages', locals: {target: @redirect} %>
 
 <%= form_for([:admin, @redirect]) do |f| %>
-  <%= render "form", :form => f %>
-  <p class="form-buttons">
-    <%= button t('create') %> <%= t('or') %> <%= link_to t('cancel'), collection_url %>
-  </p>
-<% end %>
+  <fieldset data-hook="new_redirect">
+    <legend align="center"><%= Spree.t(:new_redirect) %></legend>
 
-<% if request.xhr? %>
-  <script type="text/javascript">
-  //<![CDATA[
-    (function($){
-      $("#new_spree_redirect .form-buttons a").click(function(evt) {
-        evt.preventDefault();
-        $("#new_redirect_form").empty();
-        $("#new_redirect_link").show();
-      });
-    })(jQuery);
-  //]]>
-  </script>
+    <%= render partial: 'form', locals: {form: f} %>
+
+    <div class='clearfix'></div>
+
+    <%= render :partial => 'spree/admin/shared/new_resource_links' %>
+  </fieldset>
 <% end %>

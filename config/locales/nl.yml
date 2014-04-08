@@ -1,0 +1,10 @@
+nl:
+  spree:
+    old_url: Oude URL
+    new_url: Nieuwe URL
+    redirect: Redirect
+    redirects: Redirects aanpassen
+    http_code: "HTTP code"
+    explain_redirects: "Forward oude links naar nieuwe URL's"
+    duplicate_url_error: Oude URL mag niet gelijk zijn aan nieuwe URL
+    back_to_redirects_list: Terug naar redirects

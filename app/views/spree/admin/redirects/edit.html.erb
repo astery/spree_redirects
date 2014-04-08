@@ -1,12 +1,21 @@
-<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+<% content_for :page_actions do %>
+  <li><%= button_link_to Spree.t(:back_to_redirects_list), admin_redirects_url, :icon => 'icon-arrow-left' %></li>
+  <% if can?(:create, Spree::Redirect) %>
+    <li id="new_redirect_link">
+      <%= button_link_to Spree.t(:new_redirect), new_object_url, { :icon => 'icon-plus', :id => 'admin_new_redirect' } %>
+    </li>
+  <% end %>
+<% end %>
+
 
 <h1>Edit Redirect</h1>
 
-<%= render 'spree/shared/error_messages', :target => @redirect %>
+<%= render partial: 'spree/shared/error_messages', locals: {target: @redirect} %>
 
-<%= form_for([:admin, @redirect]) do |f| %>
-  <%= render "form", :form => f %>
-  <p class="form-buttons">
-    <%= button t("update") %> <%= t('or') %> <%= link_to t('cancel'), collection_url %>
-  </p>
+<%= form_for [:admin, @redirect], :method => :put do |f| %>
+  <fieldset class="no-border-top">
+    <%= render partial: 'form', locals: {form: f} %>
+    <div class='clearfix'></div>
+    <%= render :partial => 'spree/admin/shared/edit_resource_links' %>
+  </fieldset>
 <% end %>
