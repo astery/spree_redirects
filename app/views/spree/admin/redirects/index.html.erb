@@ -5,7 +5,7 @@
 <% end %>
 
 <% content_for :table_filter_title do %>
-  <%= Spree.t(:search) %>
+  <%= t(:search) %>
 <% end %>
 
 <% content_for :table_filter do %>
@@ -34,7 +34,7 @@
 
       <div class="actions filter-actions">
         <div data-hook="admin_redirect_index_search_buttons">
-          <%= button Spree.t(:search) %>
+          <%= button t(:search) %>
         </div>
       </div>
     <% end %>
