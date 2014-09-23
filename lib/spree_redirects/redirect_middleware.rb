@@ -6,26 +6,19 @@ module SpreeRedirects
     end
 
     def call(env)
-      # when consider_all_requests_local is false, an exception is raised for 404
-      # consider_all_requests_local should be false in a production environment
+      request = ::Rack::Request.new(env)
+      return @app.call(env) if SpreeRedirects.exclude_paths.detect{|p| request.fullpath.match(p)}
 
-      begin
-        status, headers, body = @app.call(env)
-      rescue Exception => e
-        routing_error = e
+      redirects = Rails.cache.fetch("spree_redirects", expires_in: 1.day) do
+        Spree::Redirect.all.inject({}){|result, item| result[item.old_url] = [item.http_code, item.new_url];result}
       end
 
-      if routing_error.present? or status == 404
-        path = [ env["PATH_INFO"], env["QUERY_STRING"] ].join("?").sub(/[\/\?\s]*$/, "").strip
-
-        if redirect = Spree::Redirect.find_by_old_url(path)
-          status = redirect.http_code.blank? ? 301 : redirect.http_code
-          return [ status, { "Location" => redirect.new_url }, [ "Redirecting..." ] ]
-        end
-        raise routing_error unless routing_error.blank? || routing_error.is_a?(ActiveRecord::RecordNotFound)
+      if redirect_to = (redirects[URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath).to_s] || redirects[request.path])
+        status = redirect_to[0].blank? ? 301 : redirect_to[0]
+        [ status, {"Content-Type" => "text/html", "Location" => redirect_to[1] }, [ "Redirecting..." ] ]
+      else
+        @app.call(env)
       end
-
-      [ status, headers, body ]
     end
   end
 end
