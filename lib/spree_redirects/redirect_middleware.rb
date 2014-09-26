@@ -13,7 +13,7 @@ module SpreeRedirects
         Spree::Redirect.all.inject({}){|result, item| result[item.old_url] = [item.http_code, item.new_url];result}
       end
       uri = URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath)
-      uri.query = request.query_string
+      uri.query = request.query_string unless request.query_string.blank?
       if redirect_to = (redirects[uri.to_s] || redirects[request.fullpath])
         status = redirect_to[0].blank? ? 301 : redirect_to[0]
         [ status, {"Content-Type" => "text/html", "Location" => redirect_to[1] }, [ "Redirecting..." ] ]
