@@ -3,7 +3,7 @@ module SpreeRedirects
     engine_name "spree_redirects"
 
     initializer "redirect middleware" do |app|
-      app.middleware.insert_after ::ActionDispatch::Session::CacheStore, ::SpreeRedirects::RedirectMiddleware
+      app.middleware.insert_after ::ActionDispatch::DebugExceptions, ::SpreeRedirects::RedirectMiddleware
     end
 
     config.to_prepare {}
