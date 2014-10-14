@@ -1,9 +1,20 @@
-# Spree Redirects [![Build Status](https://secure.travis-ci.org/citrus/spree_redirects.png)](http://travis-ci.org/citrus/spree_redirects)
+# Spree Redirects
 
 Spree Redirects adds an interface for redirecting old urls to new ones. It's for when you replace an existing site with a shiny new spree site and want to avoid broken links and broken hearts.
 
 To get a better idea of what it does, just follow the Demo instructions below...
 
+Cloned from: git://github.com/citrus/spree_redirects.git
+Modified to Be compatible with Spree 2-0-stable and Spree 2-3-stable
+
+Added possibility to exclude paths from Redirection
+-- create an initializer with
+```ruby
+CgLanguage.exclude_paths = ["/admin"]
+```
+
+Added possibility to use full url redirection
+Added caching to improve speed.
 
 ------------------------------------------------------------------------------
 Installation
@@ -12,16 +23,10 @@ Installation
 Install spree_redirects by adding the following to your existing spree site's Gemfile:
 
 ```ruby
-gem 'spree_redirects', '0.2.0'
+gem 'spree_redirects', :git => 'git://github.com/cgservices/spree_redirects.git'
 ```
 
-Or if you want to track the git repo, add this instead:
-
-```ruby
-gem 'spree_redirects', :git => 'git://github.com/citrus/spree_redirects.git'
-```
-
-Now bundle up:
+Bundle:
 
 ```bash
 bundle
@@ -87,41 +92,6 @@ rails s
 ```
 
 Now log into the admin, click the 'Configuration' tab, then click 'Manage Redirects'. Try adding a redirect for `/shop.php` that points to `/products`, then visit [http://localhost:3000/shop.php](http://localhost:3000/shop.php). You should be redirected to `/products`.
-
-
-------------------------------------------------------------------------------
-Contributors
-------------------------------------------------------------------------------
-
-So far it's just me; Spencer Steffen.
-
-If you'd like to help out feel free to fork and send me pull requests!
-
-
-------------------------------------------------------------------------------
-Change Log
-------------------------------------------------------------------------------
-
-**2012/5/7**
-
-* Add support for spree 1.1.x
-
-
-**2012/3/14**
-
-* Add support for spree 1.0.x
-
-
-**0.2.0 - 2012/1/5**
-
-* Add support for spree 0.70.x and above
-* Remove spork development dependency
-
-
-**0.1.0 - 2011/6/1**
-
-* Initial Release
-
 
 ------------------------------------------------------------------------------
 License

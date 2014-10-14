@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "spree_redirects"
   s.version     = SpreeRedirects::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Spencer Steffen"]
-  s.email       = ["spencer@citrusme.com"]
+  s.authors     = ["Spencer Steffen", "Luis Doubrava"]
+  s.email       = ["spencer@citrusme.com", "luis@cg.nl"]
   s.homepage    = "https://github.com/citrus/spree_redirects"
   s.summary     = %q{Spree Redirects adds an interface for redirecting old url's to new ones.}
   s.description = %q{Spree Redirects adds an interface for redirecting old url's to new ones.}
