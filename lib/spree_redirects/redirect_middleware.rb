@@ -14,9 +14,6 @@ module SpreeRedirects
       end
       uri = URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath)
       uri.query = request.query_string unless request.query_string.blank?
-      Rails.logger.warn("Query string: #{request.query_string.inspect}")
-      Rails.logger.warn("URI.to_s: #{uri.to_s}")
-      Rails.logger.warn("Request.full_path: #{request.fullpath}")
       if redirect_to = (redirects[uri.to_s] || redirects[request.fullpath])
         status = redirect_to[0].blank? ? 301 : redirect_to[0]
         [ status, {"Content-Type" => "text/html", "Location" => redirect_to[1] }, [ "Redirecting..." ] ]
