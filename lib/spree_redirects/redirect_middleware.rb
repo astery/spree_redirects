@@ -9,7 +9,7 @@ module SpreeRedirects
       request = ::Rack::Request.new(env)
       return @app.call(env) if SpreeRedirects.exclude_paths.detect{|p| request.fullpath.match(p)}
 
-      redirects = Rails.cache.fetch("spree_redirects", expires_in: 10.minutes, race_condition_ttl: 2.minutes) do
+      redirects = Rails.cache.fetch("spree_redirects", race_condition_ttl: 2.minutes) do
         Spree::Redirect.all.inject({}){|result, item| result[item.old_url] = [item.http_code, item.new_url];result}
       end
       uri = URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath)
