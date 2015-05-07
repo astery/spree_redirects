@@ -1,7 +1,10 @@
 en:
-  old_url: Old URL
-  new_url: New URL
-  redirect: Redirect
-  redirects: Manage Redirects
-  explain_redirects: Forward old links to new ones
-  duplicate_url_error: The old URL may not be the same as the new URL.
+  spree:
+    old_url: Old URL
+    new_url: New URL
+    redirect: Redirect
+    redirects: Manage Redirects
+    http_code: "HTTP code"
+    explain_redirects: Forward old links to new ones
+    duplicate_url_error: The old URL may not be the same as the new URL.
+    back_to_redirects_list: Back to redirects

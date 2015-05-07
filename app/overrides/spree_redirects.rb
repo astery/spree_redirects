@@ -2,4 +2,5 @@ Deface::Override.new(:virtual_path  => "spree/admin/shared/sub_menu/_configurati
                      :name          => "spree_redirect_config_opt",
                      :insert_bottom => "[data-hook='admin_configurations_sidebar_menu']",
                      :partial       => "spree/admin/shared/redirect_config",
+                     :text          => "<%= configurations_sidebar_menu_item Spree.t(:redirects), admin_redirects_path %>",
                      :disabled      => false)

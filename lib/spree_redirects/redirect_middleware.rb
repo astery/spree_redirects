@@ -1,38 +1,27 @@
 module SpreeRedirects
   class RedirectMiddleware
-    
+
     def initialize(app)
       @app = app
     end
-   
+
     def call(env)
-      # when consider_all_requests_local is false, an exception is raised for 404
-      # consider_all_requests_local should be false in a production environment
+      request = ::Rack::Request.new(env)
+      return @app.call(env) if SpreeRedirects.exclude_paths.detect{|p| request.fullpath.match(p)}
 
-      begin
-        status, headers, body = @app.call(env)
-      rescue Exception => e
-        routing_error = e
+      redirects = Rails.cache.fetch("spree_redirects", expires_in: 1.minute) do
+        Spree::Redirect.all.inject({}){|result, item| result[item.old_url] = [item.http_code, item.new_url];result}
       end
-
-      if routing_error.present? or status == 404
-        path = [ env["PATH_INFO"], env["QUERY_STRING"] ].join("?").sub(/[\/\?\s]*$/, "").strip
-
-        if url = find_redirect(path)
-          # Issue a "Moved permanently" response with the redirect location
-          return [ 301, { "Location" => url }, [ "Redirecting..." ] ]
-        end
+      uri = URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath)
+      uri.query = request.query_string unless request.query_string.blank?
+      if redirect_to = (redirects[uri.to_s] || redirects[request.fullpath])
+        status = redirect_to[0].blank? ? 301 : redirect_to[0]
+        [ status, {"Content-Type" => "text/html", "Location" => redirect_to[1] }, [ "Redirecting..." ] ]
+      else
+        @app.call(env)
       end
-
-      raise routing_error if routing_error.present?
-
-      [ status, headers, body ]
+    rescue
+      @app.call(env)
     end
-    
-    def find_redirect(url)
-      redirect = Spree::Redirect.find_by_old_url(url)
-      redirect.new_url unless redirect.nil?
-    end
-    
   end
-end 
+end
