@@ -9,12 +9,13 @@ module SpreeRedirects
       request = ::Rack::Request.new(env)
       return @app.call(env) if SpreeRedirects.exclude_paths.detect{|p| request.fullpath.match(p)}
 
-      redirects = Rails.cache.fetch("spree_redirects", expires_in: 1.minute) do
+      redirects = Rails.cache.fetch("spree_redirects", expires_in: 10.minutes) do
         Spree::Redirect.all.inject({}){|result, item| result[item.old_url] = [item.http_code, item.new_url];result}
       end
       uri = URI.join("#{request.scheme}://#{request.host_with_port}", request.fullpath)
       uri.query = request.query_string unless request.query_string.blank?
-      if redirect_to = (redirects[uri.to_s] || redirects[request.fullpath])
+
+      if redirect_to = (redirects[uri.to_s] || (redirects[uri.to_s.chop] if uri.to_s.last == '/') || redirects[request.fullpath] || (redirects[request.fullpath.chop] if request.fullpath.last == '/'))
         status = redirect_to[0].blank? ? 301 : redirect_to[0]
         [ status, {"Content-Type" => "text/html", "Location" => redirect_to[1] }, [ "Redirecting..." ] ]
       else
