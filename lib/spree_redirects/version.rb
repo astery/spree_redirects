@@ -1,3 +1,3 @@
 module SpreeRedirects
-  VERSION = "0.3.7"
+  VERSION = "0.1.5"
 end
