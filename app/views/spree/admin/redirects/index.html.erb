@@ -73,3 +73,26 @@
   <li><%= button_link_to Spree.t(:new_redirect), new_admin_redirect_url, {remote: true, icon: 'icon-plus', id: "admin_new_redirect"} %></li>
 <% end %>
 
+<%= form_tag spree.admin_redirects_path, multipart: true do %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1 class="panel-title">CSV</h1>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <%= label_tag :date, 'CSV File' %>
+            <%= file_field_tag :csv_file %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <%= submit_tag Spree.t(:continue), :name => 'csv', class: "btn btn-success" %>
+        </div>
+      </div>
+    </div>
+    <%= @existing %>
+  </div>
+<% end %>
