@@ -17,8 +17,9 @@ module Spree
       end
 
       def normalize_url(url)
-        return url if url.blank? or url == '/'
+        return url if url.blank? || url == '/'
         url.strip.sub(/^[\/\s]*/, "/").sub(/\/+$/, "") unless url.strip.start_with? 'http'
+        url
       end
 
     end
