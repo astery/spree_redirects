@@ -43,7 +43,7 @@ class Spree::Admin::RedirectsController < Spree::Admin::ResourceController
       if existing_redirect.present?
         existing_redirect.update(new_url: row['New URL'])
       else
-        Spree::Redirect.create(old_url: row['Old URL'], new_url: row['New URL'])
+        Spree::Redirect.create(old_url: row['Old URL'], new_url: row['New URL'], http_code: '301')
       end
     end
   end
