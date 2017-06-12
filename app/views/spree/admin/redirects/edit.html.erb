@@ -1,13 +1,11 @@
-<%= render :partial => 'spree/admin/shared/configuration_menu' %>
-
 <h1>Edit Redirect</h1>
 
 <%= render partial: 'spree/shared/error_messages', locals: {target: @redirect} %>
 
-<%= form_for [:admin, @redirect], :method => :put do |f| %>
+<%= form_for [:admin, @redirect], method: :put do |f| %>
   <fieldset class="no-border-top">
     <%= render partial: 'form', locals: {form: f} %>
     <div class='clearfix'></div>
-    <%= render :partial => 'spree/admin/shared/edit_resource_links' %>
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
   </fieldset>
 <% end %>

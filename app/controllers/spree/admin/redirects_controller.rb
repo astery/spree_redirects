@@ -32,24 +32,32 @@ class Spree::Admin::RedirectsController < Spree::Admin::ResourceController
     import_csv
 
     flash[:success] = 'Redirects are successfully imported.'
-    flash[:error] = '(Some) redirects are not imported, because already exist: ' + @existing_urls.join(', ') unless @existing_urls.empty?
-
     redirect_to :back
   end
 
   def import_csv
-    @existing_urls = []
-    CSV.read(params_by_csv.path, headers:true).each do |row|
-      old_redirect_found = Spree::Redirect.find_by_old_url row['old_url']
-      @existing_urls << old_redirect_found.old_url if old_redirect_found
-      next if old_redirect_found
-      redirect = Spree::Redirect.new row.to_hash
-      result = redirect.save
-      @existing_urls << redirect.old_url unless result
+    return unless csv_header_valid?
+
+    CSV.read(params_by_csv.path, headers: true, col_sep: ';').each do |row|
+      existing_redirect = Spree::Redirect.find_by_old_url row['Old URL']
+      if existing_redirect.present?
+        existing_redirect.update(new_url: row['New URL'])
+      else
+        Spree::Redirect.create(old_url: row['Old URL'], new_url: row['New URL'], http_code: '301')
+      end
     end
   end
 
   def params_by_csv
     params.require(:csv_file)
+  end
+
+  def csv_header_valid?
+    correct_header = ['Old URL', 'New URL']
+    imported_header = CSV.read(params_by_csv.path, col_sep: ';').first
+
+    return true if imported_header == correct_header
+    flash[:error] = "CSV header must be: #{correct_header}, you entered: #{imported_header}"
+    false
   end
 end
