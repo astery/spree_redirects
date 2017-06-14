@@ -54,7 +54,7 @@ class Spree::Admin::RedirectsController < Spree::Admin::ResourceController
 
   def csv_header_valid?
     correct_header = ['Old URL', 'New URL']
-    imported_header = CSV.read(params_by_csv.path, col_sep: ';').first
+    imported_header = CSV.read(params_by_csv.path, col_sep: ';').first.compact
 
     return true if imported_header == correct_header
     flash[:error] = "CSV header must be: #{correct_header}, you entered: #{imported_header}"
