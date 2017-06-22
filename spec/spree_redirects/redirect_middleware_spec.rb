@@ -53,7 +53,7 @@ module SpreeRedirects
             request = OpenStruct.new(query_string: query_string)
             allow(::Rack::Request).to receive(:new).and_return(request)
 
-            allow(URI).to receive(:join).and_return(old_url)
+            allow(URI).to receive(:join).and_return(old_url + "?#{query_string}")
 
             redirects = { old_url  => [301, new_url] }
             allow(redirects_cache).to receive(:fetch).and_return(redirects)
@@ -73,6 +73,24 @@ module SpreeRedirects
             redirects = { redirect_url  => [301, new_url] }
             allow(redirects_cache).to receive(:fetch).and_return(redirects)
             expect(subject.call(env)).to eq [301, { "Content-Type" => "text/html", "Location" => new_url }, ["Redirecting..."]]
+          end
+
+          context 'and the url contains parameters' do
+            it 'responds with a 301' do
+              old_url = "http://recharge.com/en-US/carrier-netherlands"
+              new_url = "http://recharge.com/en/netherlands/carrier-top-up"
+              query_string = "test=true"
+
+              request = OpenStruct.new(query_string: query_string)
+              allow(::Rack::Request).to receive(:new).and_return(request)
+
+              allow(URI).to receive(:join).and_return(old_url + "?#{query_string}")
+
+              redirect_url = old_url.gsub('US', '??')
+              redirects = { redirect_url  => [301, new_url] }
+              allow(redirects_cache).to receive(:fetch).and_return(redirects)
+              expect(subject.call(env)).to eq [301, { "Content-Type" => "text/html", "Location" => "#{new_url}?#{query_string}" }, ["Redirecting..."]]
+            end
           end
         end
       end
