@@ -60,6 +60,21 @@ module SpreeRedirects
             expect(subject.call(env)).to eq [301, { "Content-Type" => "text/html", "Location" => "#{new_url}?#{query_string}" }, ["Redirecting..."]]
           end
         end
+
+        context 'and the redirect contains wildcards' do
+          it 'responds with a 301' do
+            old_url = "http://recharge.com/en-US/carrier-netherlands"
+            new_url = "http://recharge.com/en/netherlands/carrier-top-up"
+
+            allow(::Rack::Request).to receive(:new).and_return(OpenStruct.new)
+            allow(URI).to receive(:join).and_return(old_url)
+
+            redirect_url = old_url.gsub('US', '??')
+            redirects = { redirect_url  => [301, new_url] }
+            allow(redirects_cache).to receive(:fetch).and_return(redirects)
+            expect(subject.call(env)).to eq [301, { "Content-Type" => "text/html", "Location" => new_url }, ["Redirecting..."]]
+          end
+        end
       end
 
       context "when the url is not a redirect" do
