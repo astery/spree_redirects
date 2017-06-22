@@ -35,11 +35,9 @@ module SpreeRedirects
     def get_redirect_values(redirects, url)
       url_without_params = url.gsub(/\?.*$/, '')
       url_without_params = url_without_params.chop if url_without_params.last == '/'
-      escaped_url = Regexp.escape(url_without_params).gsub('\?','.')
-      url_regexp = Regexp.new(escaped_url)
 
       redirects.detect do |redirect_url, _values|
-        url_regexp =~ url_without_params
+        Regexp.new(redirect_url.gsub('?','.')) =~ url_without_params
       end.try(:[], 1)
     end
   end
