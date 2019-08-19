@@ -24,6 +24,7 @@ Install spree_redirects by adding the following to your existing spree site's Ge
 
 ```ruby
 gem 'spree_redirects', :git => 'git://github.com/cgservices/spree_redirects.git'
+gem 'rails-observers', github: 'rails/rails-observers'
 ```
 
 Bundle:
