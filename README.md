@@ -10,7 +10,7 @@ Modified to Be compatible with Spree 2-0-stable and Spree 2-3-stable
 Added possibility to exclude paths from Redirection
 -- create an initializer with
 ```ruby
-CgLanguage.exclude_paths = ["/admin"]
+SpreeRedirects.exclude_paths = ["/admin"]
 ```
 
 Added possibility to use full url redirection

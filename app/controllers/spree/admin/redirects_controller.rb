@@ -25,7 +25,7 @@ class Spree::Admin::RedirectsController < Spree::Admin::ResourceController
     params[:q] ||= {}
     params[:q][:s] ||= "old_url asc"
     @search = Spree::Redirect.search(params[:q])
-    @collection = @search.result.page(params[:page]).per(Spree::Config[:orders_per_page])
+    @collection = @search.result.page(params[:page]).per(Spree::Config[:admin_orders_per_page])
   end
 
   def by_csv
