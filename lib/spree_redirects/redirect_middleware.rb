@@ -23,6 +23,11 @@ module SpreeRedirects
         location = request.query_string.present? ? "#{redirect_to[1]}?#{request.query_string}" : redirect_to[1]
 
         [ status, { "Content-Type" => "text/html", "Location" => location }, [ "Redirecting..." ] ]
+      elsif redirect_to = (redirects["!#{uri.to_s}"] || redirects["!#{request.fullpath}"])
+        status = redirect_to[0].blank? ? 301 : redirect_to[0]
+        location = redirect_to[1]
+
+        [ status, { "Content-Type" => "text/html", "Location" => location }, [ "Redirecting..." ] ]
       else
         @app.call(env)
       end
