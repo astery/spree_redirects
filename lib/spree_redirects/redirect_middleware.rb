@@ -31,8 +31,6 @@ module SpreeRedirects
       else
         @app.call(env)
       end
-    rescue
-      @app.call(env)
     end
 
     private
